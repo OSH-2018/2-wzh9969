@@ -106,7 +106,7 @@ void do_pipe(char **args, int pipenum, int filein, char* fileout) {
 					if (*fileout == '>')
 						fdout = open(fileout + 1, O_RDWR | O_CREAT | O_APPEND, 0644);
 					else
-						fdout = open(fileout, O_RDWR | O_CREAT), 0644;
+						fdout = open(fileout, O_RDWR | O_CREAT, 0644);
 					close(fileno(stdout));
 					dup2(fdout, fileno(stdout));
 					close(fdout);
