@@ -29,7 +29,7 @@ int execute(char **args, int filein, char* fileout) {
 		close(filein);
 	}
 #endif
-	/* å†…å»ºå‘½ä»¤ */
+	/* ÄÚ½¨ÃüÁî */
 	if (strcmp(args[0], "cd") == 0) {
 		if (args[1])
 			if (chdir(args[1])) {
@@ -42,7 +42,7 @@ int execute(char **args, int filein, char* fileout) {
 		puts(getcwd(wd, 4096));
 		return 0;
 	}
-	/*exportè®¾ç½®ç¯å¢ƒå˜é‡*/
+	/*exportÉèÖÃ»·¾³±äÁ¿*/
 	if (strcmp(args[0], "export") == 0) {
 		for (i = 1; args[i]; i++) {
 			for (j = 1; *(args[i] + j) != '='; j++)
@@ -57,15 +57,15 @@ int execute(char **args, int filein, char* fileout) {
 	}
 
 
-	/* å¤–éƒ¨å‘½ä»¤ */
+	/* Íâ²¿ÃüÁî */
 	pid_t pid = fork();
 	if (pid == 0) {
-		/* å­è¿›ç¨‹ */
+		/* ×Ó½ø³Ì */
 		execvp(args[0], args);
-		/* execvpå¤±è´¥ */
+		/* execvpÊ§°Ü */
 		return 255;
 	}
-	/* çˆ¶è¿›ç¨‹ */
+	/* ¸¸½ø³Ì */
 	waitpid(pid, NULL, 0);
 	return 0;
 }
@@ -82,8 +82,8 @@ void do_pipe(char **args, int pipenum, int filein, char* fileout) {
 	args[i] = NULL;
 	pipe(fd);
 	pid_t pid1, pid2;
-	if ((pid1 = fork()) != 0) {//çˆ¶è¿›ç¨‹
-		if ((pid2 = fork()) == 0) {//å­è¿›ç¨‹
+	if ((pid1 = fork()) != 0) {//¸¸½ø³Ì
+		if ((pid2 = fork()) == 0) {//×Ó½ø³Ì
 			waitpid(pid1, NULL, 0);
 			close(fd[1]);
 			close(fileno(stdin));
@@ -122,7 +122,7 @@ void do_pipe(char **args, int pipenum, int filein, char* fileout) {
 			waitpid(pid2, NULL, 0);
 		}
 	}
-	/*å¤„ç†é¦–ä¸ªå‘½ä»¤*/
+	/*´¦ÀíÊ×¸öÃüÁî*/
 	else {
 #if debug
 		printf("frontcmd%d %d\n", pipenum, getpid());
@@ -139,11 +139,11 @@ void do_pipe(char **args, int pipenum, int filein, char* fileout) {
 }
 
 int main() {
-	/* è¾“å…¥çš„å‘½ä»¤è¡Œ */
+	/* ÊäÈëµÄÃüÁîĞĞ */
 	char cmd[256];
-	/* å‘½ä»¤è¡Œæ‹†è§£æˆçš„å„éƒ¨åˆ†ï¼Œä»¥ç©ºæŒ‡é’ˆç»“å°¾ */
+	/* ÃüÁîĞĞ²ğ½â³ÉµÄ¸÷²¿·Ö£¬ÒÔ¿ÕÖ¸Õë½áÎ² */
 	char *args[128];
-	/*ç®¡é“ä¸­å‘½ä»¤ä¸ªæ•°*/
+	/*¹ÜµÀÖĞÃüÁî¸öÊı*/
 	int pipenum;
 	int nextloop;
 	int filein;
@@ -151,10 +151,10 @@ int main() {
 	char* fileout;
 	int sdout, sdin;
 	while (1) {
-		/*ä¿å­˜æ ‡å‡†è¾“å…¥è¾“å‡º*/
+		/*±£´æ±ê×¼ÊäÈëÊä³ö*/
 		sdout = dup(fileno(stdout));
 		sdin = dup(fileno(stdin));
-		/* æç¤ºç¬¦ */
+		/* ÌáÊ¾·û */
 		printf("# ");
 		fflush(stdin);
 		pipenum = 0;
@@ -162,15 +162,15 @@ int main() {
 		filein = fileno(stdin);
 		fileout = NULL;
 		fgets(cmd, 256, stdin);
-		/* æ¸…ç†ç»“å°¾çš„æ¢è¡Œç¬¦ */
+		/* ÇåÀí½áÎ²µÄ»»ĞĞ·û */
 		for (i = 0; cmd[i] != '\n'; i++)
 			;
 		cmd[i] = '\0';
-		/* æ‹†è§£å‘½ä»¤è¡Œ */
+		/* ²ğ½âÃüÁîĞĞ */
 		args[0] = cmd;
 		for (i = 0; *args[i]; i++)
 			for (args[i + 1] = args[i] + 1; *args[i + 1]; args[i + 1]++) {
-				/*æ‹†è§£å‘½ä»¤è¡Œ*/
+				/*²ğ½âÃüÁîĞĞ*/
 				if (*args[i + 1] == ' ') {
 					*args[i + 1] = '\0';
 					args[i + 1]++;
@@ -180,14 +180,14 @@ int main() {
 				}
 			}
 		args[i] = NULL;
-		/*è¯†åˆ«ç‰¹æ®Šç¬¦å·*/
+		/*Ê¶±ğÌØÊâ·ûºÅ*/
 		for (i = 0; args[i]; i++) {
 			/*pipe*/
 			if (strcmp(args[i], "|") == 0) {
 				pipenum++;
 				continue;
 			}
-			/*è¾“å…¥è¾“å‡ºé‡å®šå‘*/
+			/*ÊäÈëÊä³öÖØ¶¨Ïò*/
 #if io
 			if (*args[i] == '<') {
 				filein = open(args[i] + 1, O_RDWR);
@@ -217,12 +217,14 @@ int main() {
 				continue;
 			}
 #endif
+			if (*args[i] == '$')
+				args[i] = getenv(args[i] + 1);
 		}
 		if (nextloop) {
 			nextloop = 0;
 			continue;
 		}
-		/* æ²¡æœ‰è¾“å…¥å‘½ä»¤ */
+		/* Ã»ÓĞÊäÈëÃüÁî */
 		if (!args[0])
 			continue;
 		if (strcmp(args[0], "exit") == 0)
@@ -242,7 +244,7 @@ int main() {
 #endif
 		}
 		wait(NULL);
-		/*æ¢å¤æ ‡å‡†è¾“å…¥è¾“å‡º*/
+		/*»Ö¸´±ê×¼ÊäÈëÊä³ö*/
 		dup2(sdout, fileno(stdout));
 		dup2(sdin, fileno(stdin));
 	}
